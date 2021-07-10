@@ -18,12 +18,11 @@
 
  /**
  * @file
- *
  * Implementation of a wrapper type and related functions for a OpenCL kernel
  * arguments.
  *
  * @author Nuno Fachada
- * @date 2016
+ * @date 2019
  * @copyright [GNU Lesser General Public License version 3 (LGPLv3)](http://www.gnu.org/licenses/lgpl.html)
  * */
 
@@ -32,25 +31,28 @@
 
 /**
  * @internal
- * Determine if argument is local/private.
+ *
+ * @brief Determine if argument is local/private.
  *
  * @param[in] arg Kernel argument.
  * @return True if argument is local or private, false if argument is
  * a real ::CCLWrapper object.
  * */
 #define ccl_arg_is_local(arg) \
-	 (arg->info == (void*) &arg_local_marker)
+     (arg->info == (void *) &arg_local_marker)
 
 /**
  * @internal
- * Marker which determines if argument is local/private or a
+ *
+ * @brief Marker which determines if argument is local/private or a
  * real ::CCLWrapper object.
  * */
 static char arg_local_marker;
 
 /**
  * @internal
- * This variables defines a kernel argument to be skiped in
+ *
+ * @brief This variables defines a kernel argument to be skiped in
  * ::ccl_kernel_set_args() and ::ccl_kernel_set_args_v() functions.
  * Client code should use the ::ccl_arg_skip global variable.
  * */
@@ -59,91 +61,88 @@ static const CCLArg arg_skip = { CCL_NONE, NULL, NULL, 0 };
 /* Use this constant to skip kernel arguments in ::ccl_kernel_set_args()
  * and ::ccl_kernel_set_args_v() functions. */
 CCL_EXPORT
-const CCLArg* ccl_arg_skip = &arg_skip;
+const CCLArg * ccl_arg_skip = &arg_skip;
 
 /**
  * Create a new kernel argument.
  *
- * Arguments created with this function can local, private or NULL.
- * Client code shouldn't directly use this function, but use instead
- * ccl_arg_priv(), ccl_arg_local() or ccl_arg_full().
+ * Arguments created with this function can be local, private or `NULL`.
+ *
+ * @attention Client code shouldn't directly use this function, but use
+ * ccl_arg_priv(), ccl_arg_local() or ccl_arg_full()  instead.
  *
  * @param[in] value Argument value.
  * @param[in] size Argument size.
  * @return A new kernel argument.
  * */
 CCL_EXPORT
-CCLArg* ccl_arg_new(void* value, size_t size) {
+CCLArg * ccl_arg_new(void * value, size_t size) {
 
-	/* Make sure size is > 0. */
-	g_return_val_if_fail(size > 0, NULL);
+    /* Make sure size is > 0. */
+    g_return_val_if_fail(size > 0, NULL);
 
-	CCLArg* arg = g_slice_new(CCLArg);
+    CCLArg * arg = g_slice_new(CCLArg);
 
-	arg->cl_object = g_memdup((const void*) value, (guint) size);
-	arg->info = (void*) &arg_local_marker;
-	arg->ref_count = (gint) size;
+    arg->cl_object = g_memdup((const void *) value, (guint) size);
+    arg->info = (void *) &arg_local_marker;
+    arg->ref_count = (gint) size;
 
-	return arg;
-
+    return arg;
 }
 
 /**
- * @internal
  * Destroy a kernel argument.
  *
- * Client code shouldn't directly use this function.
+ * @warning Client code shouldn't directly use this function.
  *
  * @param[in] arg Argument to destroy.
  * */
 CCL_EXPORT
-void ccl_arg_destroy(CCLArg* arg) {
+void ccl_arg_destroy(CCLArg * arg) {
 
-	/* Make sure arg is not NULL. */
-	g_return_if_fail(arg != NULL);
+    /* Make sure arg is not NULL. */
+    g_return_if_fail(arg != NULL);
 
-	if ccl_arg_is_local(arg) {
-		g_free(arg->cl_object);
-		g_slice_free(CCLArg, arg);
-	}
+    if ccl_arg_is_local(arg) {
+        g_free(arg->cl_object);
+        g_slice_free(CCLArg, arg);
+    }
 }
 
 /**
- * @internal
  * Get size in bytes of kernel argument.
  *
- * Client code shouldn't directly use this function.
+ * @warning Client code shouldn't directly use this function.
  *
  * @param[in] arg Argument to get size of.
  * @return Argument size in bytes.
  * */
 CCL_EXPORT
-size_t ccl_arg_size(CCLArg* arg) {
+size_t ccl_arg_size(CCLArg * arg) {
 
-	/* Make sure arg is not NULL. */
-	g_return_val_if_fail(arg != NULL, 0);
+    /* Make sure arg is not NULL. */
+    g_return_val_if_fail(arg != NULL, 0);
 
-	return ccl_arg_is_local(arg)
-		? (size_t) arg->ref_count
-		: sizeof(void*);
+    return ccl_arg_is_local(arg)
+        ? (size_t) arg->ref_count
+        : sizeof(void *);
 }
 
 /**
- * @internal
  * Get value of kernel argument.
  *
- * Client code shouldn't directly use this function.
+ * @warning Client code shouldn't directly use this function.
  *
  * @param[in] arg Argument to get value of.
  * @return Argument value.
  * */
 CCL_EXPORT
-void* ccl_arg_value(CCLArg* arg) {
+void * ccl_arg_value(CCLArg * arg) {
 
-	/* Make sure arg is not NULL. */
-	g_return_val_if_fail(arg != NULL, NULL);
+    /* Make sure arg is not NULL. */
+    g_return_val_if_fail(arg != NULL, NULL);
 
-	return ccl_arg_is_local(arg)
-		? arg->cl_object
-		: &arg->cl_object;
+    return ccl_arg_is_local(arg)
+        ? arg->cl_object
+        : &arg->cl_object;
 }

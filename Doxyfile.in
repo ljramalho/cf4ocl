@@ -351,12 +351,18 @@ EXTRACT_ALL            = NO
 # If the EXTRACT_PRIVATE tag is set to YES all private members of a class
 # will be included in the documentation.
 
-EXTRACT_PRIVATE        = NO
+EXTRACT_PRIVATE        = @DOX_INTERNAL@
+
+# If the EXTRACT_PACKAGE tag is set to YES, all members with package or
+# internal scope will be included in the documentation. The default value is
+# NO.
+
+EXTRACT_PACKAGE        = @DOX_INTERNAL@
 
 # If the EXTRACT_STATIC tag is set to YES all static members of a file
 # will be included in the documentation.
 
-EXTRACT_STATIC         = NO
+EXTRACT_STATIC         = @DOX_INTERNAL@
 
 # If the EXTRACT_LOCAL_CLASSES tag is set to YES classes (and structs)
 # defined locally in source files will be included in the documentation.
@@ -668,38 +674,9 @@ INPUT_ENCODING         = UTF-8
 
 FILE_PATTERNS          = *.c \
                          *.cl \
-                         *.cc \
                          *.md \
-                         *.cxx \
-                         *.cpp \
-                         *.c++ \
-                         *.d \
-                         *.java \
-                         *.ii \
-                         *.ixx \
-                         *.ipp \
-                         *.i++ \
-                         *.inl \
                          *.h \
-                         *.hh \
-                         *.hxx \
-                         *.hpp \
-                         *.h++ \
-                         *.idl \
-                         *.odl \
-                         *.cs \
-                         *.php \
-                         *.php3 \
-                         *.inc \
-                         *.m \
-                         *.mm \
-                         *.dox \
                          *.py \
-                         *.f90 \
-                         *.f \
-                         *.for \
-                         *.vhd \
-                         *.vhdl
 
 # The RECURSIVE tag can be used to turn specify whether or not subdirectories
 # should be searched for input files as well. Possible values are YES and NO.
@@ -727,7 +704,10 @@ EXCLUDE_SYMLINKS       = NO
 # against the file with absolute path, so to exclude all test directories
 # for example use the pattern */test/*
 
-EXCLUDE_PATTERNS       = *.in.*
+EXCLUDE_PATTERNS       = @PROJECT_SOURCE_DIR@/src/lib/*.h \
+                         *export.h \
+                         *.in.* \
+                         @DOX_EXCLUDE_PATTERNS@
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the
@@ -1513,6 +1493,7 @@ PREDEFINED             = CL_VERSION_1_0 \
                          CL_VERSION_1_2 \
                          CL_VERSION_2_0 \
                          CL_VERSION_2_1 \
+                         CL_VERSION_2_2 \
                          CL_API_ENTRY= \
                          CL_API_CALL= \
                          CL_CALLBACK= \
@@ -1571,11 +1552,6 @@ ALLEXTERNALS           = NO
 
 EXTERNAL_GROUPS        = YES
 
-# The PERL_PATH should be the absolute path and name of the perl script
-# interpreter (i.e. the result of `which perl').
-
-PERL_PATH              = /usr/bin/perl
-
 #---------------------------------------------------------------------------
 # Configuration options related to the dot tool
 #---------------------------------------------------------------------------
@@ -1587,15 +1563,6 @@ PERL_PATH              = /usr/bin/perl
 # install and use dot, since it yields more powerful graphs.
 
 CLASS_DIAGRAMS         = YES
-
-# You can define message sequence charts within doxygen comments using the \msc
-# command. Doxygen will then run the mscgen tool (see
-# http://www.mcternan.me.uk/mscgen/) to produce the chart and insert it in the
-# documentation. The MSCGEN_PATH tag allows you to specify the directory where
-# the mscgen tool resides. If left empty the tool is assumed to be found in the
-# default search path.
-
-MSCGEN_PATH            =
 
 # If set to YES, the inheritance and collaboration graphs will hide
 # inheritance and usage relations if the target is undocumented

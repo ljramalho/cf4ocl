@@ -16,16 +16,20 @@
  * */
 
 /**
+ * @internal
+ *
  * @file
  * File containing sum kernel for testing.
  *
  * @author Nuno Fachada
- * @date 2016
+ * @date 2019
  * @copyright [GNU General Public License version 3 (GPLv3)](http://www.gnu.org/licenses/gpl.html)
  * */
 
 /**
- * Performs sum of two vectors plus a constant.
+ * @internal
+ *
+ * @brief Performs sum of two vectors plus a constant.
  *
  * @param[in] a First vector to sum.
  * @param[in] b Second vector to sum.
@@ -33,12 +37,12 @@
  * @param[in] d Constant to sum.
  * */
 __kernel void test_sum_full(
-	__global const uint *a,
-	__global const uint *b,
-	__global uint *c, uint d) {
+    __global const uint * a,
+    __global const uint * b,
+    __global uint * c, uint d) {
 
-		/* Get global ID. */
-		int gid = get_global_id(0);
-		/* Perform sum. */
-		c[gid] = a[gid] + b[gid] + d;
+        /* Get global ID. */
+        int gid = get_global_id(0);
+        /* Perform sum. */
+        c[gid] = a[gid] + b[gid] + d;
 }

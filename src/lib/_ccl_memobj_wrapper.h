@@ -18,14 +18,14 @@
 
 /**
  * @internal
- * @file
  *
+ * @file
  * Implementation of a wrapper class for OpenCL memory objects and declaration
  * of some of this methods. This file is only for building _cf4ocl_. Is is not
  * part of its public API.
  *
  * @author Nuno Fachada
- * @date 2016
+ * @date 2019
  * @copyright [GNU Lesser General Public License version 3 (LGPLv3)](http://www.gnu.org/licenses/lgpl.html)
  * */
 
@@ -44,22 +44,12 @@
  * */
 struct ccl_memobj {
 
-	/**
-	 * Parent wrapper object.
-	 * @private
-	 * */
-	CCLWrapper base;
-
-	/**
-	 * Context wrapper.
-	 * @private
-	 * */
-	CCLContext* ctx;
+    /**
+     * Parent wrapper object.
+     * @private
+     * */
+    CCLWrapper base;
 
 };
-
-/* Implementation of ccl_wrapper_release_fields() function for
- * ::CCLMemObj wrapper objects. */
-void ccl_memobj_release_fields(CCLMemObj* mo);
 
 #endif

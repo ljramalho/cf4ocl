@@ -9,44 +9,82 @@ env:
 matrix:
   include:
     - os: linux
-      dist: trusty
+      dist: xenial
       sudo: required
       compiler: gcc
-      env: CMAKEOPTIONS="-D OpenCL_LOCAL_HEADERS=2.0 -D OpenCL_USE_LOCAL_HEADERS=1 -D OpenCL_LIBRARY=${HOME}/AMDAPPSDK/lib/x86_64/sdk/libOpenCL.so -D OpenCL_INCLUDE_DIR=${HOME}/AMDAPPSDK/include -D TESTS_COVERALLS=1"
+      env:
+        - CMAKEOPTIONS="-D OpenCL_LOCAL_HEADERS=2.0
+          -D OpenCL_USE_LOCAL_HEADERS=1
+          -D CMAKE_BUILD_TYPE=Debug
+          -D TESTS_GENERATE_COVERAGE=1"
+        - CMAKE_TEST_TARGET=codecov
       before_install:
-        - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
-        - bash .travis/install_deps.sh
+        - echo -n | openssl s_client -connect scan.coverity.com:443 |
+          sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' |
+          sudo tee -a /etc/ssl/certs/ca-
+        - git clone https://github.com/pocl/pocl
+        - pushd pocl
+        - git checkout v1.3
+        - mkdir build
+        - pushd build
+        - cmake -G Ninja -DWITH_LLVM_CONFIG=/usr/bin/llvm-config-4.0 -DCMAKE_INSTALL_PREFIX=/usr ..
+        - sudo ninja install
+        - popd
+        - popd
       addons:
         apt:
+          sources:
+          - sourceline: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-4.0 main'
+            key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
           packages:
-          - libglib2.0-dev
           - lcov
+          - bats
+          - ocl-icd-libopencl1
+          - ocl-icd-dev
+          - ocl-icd-opencl-dev
+          - libhwloc-dev
+          - dialog
+          - ninja-build
+          - libclang-4.0-dev
+          - clang-4.0
+          - llvm-4.0
+          - llvm-4.0-dev
         coverity_scan:
           project:
             name: "fakenmc/cf4ocl"
             description: "Build submitted via Travis CI"
           notification_email: faken@fakenmc.com
-          build_command_prepend: "cmake -G\"Unix Makefiles\" -D CMAKE_BUILD_TYPE=Debug -D TESTS_USE_OPENCL_STUB=0 ${CMAKEOPTIONS} .."
+          build_command_prepend: mkdir b && cd b && cmake -G\"Unix Makefiles\"
+                                 ${CMAKEOPTIONS} ..
           build_command: "make"
           branch_pattern: coverity_scan
-    - os: osx
-      osx_image: xcode8.2
-      env: CMAKEOPTIONS="-D OpenCL_USE_LOCAL_HEADERS=0 -D TESTS_COVERALLS=0"
-      before_install:
-        - brew update
-        - brew install glib bats
+      after_success:
+        - bash <(curl -s https://codecov.io/bash)
+    # - os: osx
+    #   osx_image: xcode9.4
+    #   env:
+    #     - CMAKEOPTIONS="-D OpenCL_USE_LOCAL_HEADERS=0 -D CMAKE_BUILD_TYPE=Debug"
+    #     - CMAKE_TEST_TARGET=test
+    #   before_install:
+    #     - brew update
+    #     - brew install glib bats
+    # - os: osx
+    #   osx_image: xcode10.2
+    #   env:
+    #     - CMAKEOPTIONS="-D OpenCL_USE_LOCAL_HEADERS=0 -D CMAKE_BUILD_TYPE=Debug"
+    #     - CMAKE_TEST_TARGET=test
+    #   before_install:
+    #     - brew update
+    #     - brew install bats
 
 script:
   - mkdir build
   - pushd build
   - echo ${CMAKEOPTIONS}
-  - cmake -G"Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug -D TESTS_USE_OPENCL_STUB=0 ${CMAKEOPTIONS} ..
+  - cmake -G"Unix Makefiles" ${CMAKEOPTIONS} ..
   - make
   - ./src/utils/ccl_devinfo
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then make coveralls   ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then make test          ; fi
-  - make clean
-  - cmake -G"Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug -D TESTS_USE_OPENCL_STUB=1 ${CMAKEOPTIONS} ..
-  - make tests
-  - gtester ./tests/lib/test_*
+  - make ${CMAKE_TEST_TARGET}
+#  - bats ./tests/examples ./tests/utils
+#  - gtester -k ./tests/lib/test_*
   - popd

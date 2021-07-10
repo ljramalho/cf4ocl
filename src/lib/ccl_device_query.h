@@ -18,11 +18,10 @@
 
 /**
  * @file
- *
  * Functions for querying OpenCL devices.
  *
  * @author Nuno Fachada
- * @date 2016
+ * @date 2019
  * @copyright [GNU Lesser General Public License version 3 (LGPLv3)](http://www.gnu.org/licenses/lgpl.html)
  * */
 
@@ -48,51 +47,50 @@
 /**
  * Output formatting function.
  *
- * @param[in] info CL device information bitfield.
- * @param[out] out Char buffer (pre-allocated) were to write formatted
+ * @param[in] info Information wrapper object.
+ * @param[out] out Character buffer (pre-allocated) where to write formatted
  * output.
  * @param[in] size Maximum output length.
  * @param[in] units Parameter units suffix.
- * @return Formatted output (same address as parameter out).
+ * @return Formatted output (same address as parameter `out`).
  * */
-typedef char* (*ccl_devquery_format)(CCLWrapperInfo* info, char* out,
-	size_t size, const char* units);
+typedef char * (*ccl_devquery_format)(CCLWrapperInfo * info, char * out,
+    size_t size, const char * units);
 
 /**
- * Maps a string to a cl_device_info bitfield.
+ * Maps a string to a `cl_device_info` bitfield.
  * */
 typedef struct ccl_devquery_map {
 
-	/**
-	 * Parameter name string.
-	 * @public
-	 * */
-	const char* const param_name;
+    /**
+     * Parameter name string.
+     * @public
+     * */
+    const char * const param_name;
 
-	/**
-	 * CL device information bitfield.
-	 * @public
-	 * */
+    /**
+     * CL device information bitfield.
+     * @public
+     * */
+    const cl_device_info device_info;
 
-	const cl_device_info device_info;
+    /**
+     * Long description of parameter.
+     * @public
+     * */
+    const char * const description;
 
-	/**
-	 * Long description of parameter.
-	 * @public
-	 * */
-	const char* const description;
+    /**
+     * Output formatting function.
+     * @public
+     * */
+    const ccl_devquery_format format;
 
-	/**
-	 * Output formatting function.
-	 * @public
-	 * */
-	const ccl_devquery_format format;
-
-	/**
-	 * Parameter units suffix.
-	 * @public
-	 * */
-	const char* const units;
+    /**
+     * Parameter units suffix.
+     * @public
+     * */
+    const char * const units;
 
 } CCLDevQueryMap;
 
@@ -100,44 +98,44 @@ typedef struct ccl_devquery_map {
 CCL_EXPORT
 extern const int ccl_devquery_info_map_size;
 
-/** Map of parameter name strings to respective cl_device_info
+/** Map of parameter name strings to respective `cl_device_info`
  * bitfields, long description string, format output function and a
  * units suffix. */
 CCL_EXPORT
 extern const CCLDevQueryMap ccl_devquery_info_map[];
 
+/* Return the index of the device information map object of the
+ * given parameter name. */
+CCL_EXPORT
+int ccl_devquery_get_index(const char * name);
+
 /* Get a final device info prefix in the same format as
  * kept in the ccl_devquery_info_map. */
 CCL_EXPORT
-gchar* ccl_devquery_get_prefix_final(const char* prefix);
+gchar * ccl_devquery_get_prefix_final(const char * prefix);
 
-/* Return a cl_device_info object given its name. */
+/* Return a `cl_device_info` object given its name. */
 CCL_EXPORT
-cl_device_info ccl_devquery_name(const char* name);
-
-/* Get a list of device information parameters which have the
- * given prefix. */
-CCL_EXPORT
-const CCLDevQueryMap* ccl_devquery_prefix(const char* prefix, int* size);
+cl_device_info ccl_devquery_name(const char * name);
 
 /* Search for a device information parameter by matching part
  * of its name. This function is supposed to be used in a loop. */
 CCL_EXPORT
-const CCLDevQueryMap* ccl_devquery_match(const char* substr, int* idx);
+const CCLDevQueryMap * ccl_devquery_match(const char * substr, int * idx);
 
 /**
- * Map an OpenCL cl_device_type object to a string identifying
+ * Map an OpenCL `cl_device_type` object to a string identifying
  * the device type.
  *
- * @param[in] type The OpenCL cl_device_type.
+ * @param[in] type The OpenCL `cl_device_type`.
  * @return String identifying device type.
  * */
 #define ccl_devquery_type2str(type) \
-	(((type) & CL_DEVICE_TYPE_CPU) ? "CPU" : \
-		(((type) & CL_DEVICE_TYPE_GPU) ? "GPU" : \
-			(((type) & CL_DEVICE_TYPE_ACCELERATOR) ? "Accelerator" : \
-				(((type) & CL_DEVICE_TYPE_CUSTOM) ? "Custom" : \
-					"Unknown"))))
+    (((type) & CL_DEVICE_TYPE_CPU) ? "CPU" : \
+        (((type) & CL_DEVICE_TYPE_GPU) ? "GPU" : \
+            (((type) & CL_DEVICE_TYPE_ACCELERATOR) ? "Accelerator" : \
+                (((type) & CL_DEVICE_TYPE_CUSTOM) ? "Custom" : \
+                    "Unknown"))))
 
 /** @} */
 

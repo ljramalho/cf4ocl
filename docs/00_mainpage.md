@@ -1,7 +1,6 @@
-@brief _cf4ocl_, a C Framework for OpenCL
+# Introduction {#intro}
 
-Introduction {#intro}
-============
+@brief _cf4ocl_, a C Framework for OpenCL
 
 ## Overview {#intro_overview}
 
@@ -42,7 +41,7 @@ data transfers.
 The example below shows a clean and fast way to create an OpenCL context with a
 user-selected device:
 
-~~~~~~~~~~~~~~~{.c}
+```c
 #include <cf4ocl2.h>
 int main() {
 
@@ -58,7 +57,7 @@ int main() {
 
     return 0;
 }
-~~~~~~~~~~~~~~~
+```
 
 ## Not yet integrated
 

@@ -16,16 +16,20 @@
  * */
 
 /**
+ * @internal
+ *
  * @file
  * The do_xor function implementation.
  *
  * @author Nuno Fachada
- * @date 2016
+ * @date 2019
  * @copyright [GNU General Public License version 3 (GPLv3)](http://www.gnu.org/licenses/gpl.html)
  * */
 
 /**
- * Performs XOR of three unsigned integers.
+ * @internal
+ *
+ * @brief Performs XOR of three unsigned integers.
  *
  * @param[in] a First integer to XOR.
  * @param[in] b Second integer to XOR.
@@ -33,7 +37,7 @@
  * */
 uint do_xor(uint a, uint b, uint c) {
 
-	/* Perform XOR. */
-	return a ^ b ^ c;
+    /* Perform XOR. */
+    return a ^ b ^ c;
 
 }

@@ -18,12 +18,11 @@
 
  /**
  * @file
- *
  * Definition of a wrapper type and related functions for a OpenCL kernel
  * arguments.
  *
  * @author Nuno Fachada
- * @date 2016
+ * @date 2019
  * @copyright [GNU Lesser General Public License version 3 (LGPLv3)](http://www.gnu.org/licenses/lgpl.html)
  * */
 
@@ -45,19 +44,19 @@ typedef CCLWrapper CCLArg;
 
 /* Create a new kernel argument. */
 CCL_EXPORT
-CCLArg* ccl_arg_new(void* value, size_t size);
+CCLArg * ccl_arg_new(void * value, size_t size);
 
 /* Destroy a kernel argument. */
 CCL_EXPORT
-void ccl_arg_destroy(CCLArg* arg);
+void ccl_arg_destroy(CCLArg * arg);
 
 /* Get size in bytes of kernel argument. */
 CCL_EXPORT
-size_t ccl_arg_size(CCLArg* arg);
+size_t ccl_arg_size(CCLArg * arg);
 
 /* Get value of kernel argument. */
 CCL_EXPORT
-void* ccl_arg_value(CCLArg* arg);
+void * ccl_arg_value(CCLArg * arg);
 
 /**
  * @defgroup CCL_KERNEL_ARG Kernel argument wrappers
@@ -83,7 +82,7 @@ void* ccl_arg_value(CCLArg* arg);
  * _Kernel code:_
  * @code{.c}
  * __kernel void my_kernel(
- *     __global int* g, __local int *l, __private float p) {
+ *     __global int * g, __local int * l, __private float p) {
  * @endcode
  * @code{.c}
  * }
@@ -91,12 +90,12 @@ void* ccl_arg_value(CCLArg* arg);
  * _Host code:_
  * @code{.c}
  * #define LOC_SIZE 16
- * const cl_float pi=3.1415;
+ * const cl_float pi = 3.1415;
  * @endcode
  * @code{.c}
- * CCLProgram* prg;
- * CCLKernel* krnl;
- * CCLBuffer* buf;
+ * CCLProgram * prg;
+ * CCLKernel * krnl;
+ * CCLBuffer * buf;
  * @endcode
  * @code{.c}
  * krnl = ccl_program_get_kernel(prg, "my_kernel", NULL);
@@ -124,7 +123,7 @@ void* ccl_arg_value(CCLArg* arg);
  * ::ccl_kernel_set_args_and_enqueue_ndrange_v() functions.
  * */
 CCL_EXPORT
-extern const CCLArg* ccl_arg_skip;
+extern const CCLArg * ccl_arg_skip;
 
 /**
  * Define a private kernel argument.
@@ -139,7 +138,7 @@ extern const CCLArg* ccl_arg_skip;
  * @return A private ::CCLArg* kernel argument.
  * */
 #define ccl_arg_priv(value, type) \
-	ccl_arg_new(&value, sizeof(type))
+    ccl_arg_new(&value, sizeof(type))
 
 /**
  * Defines a local kernel argument, which allocates local memory
@@ -154,7 +153,7 @@ extern const CCLArg* ccl_arg_skip;
  * @return A local ::CCLArg* kernel argument.
  * */
 #define ccl_arg_local(count, type) \
-	ccl_arg_new(NULL, count * sizeof(type))
+    ccl_arg_new(NULL, count * sizeof(type))
 
 /**
  * Defines a kernel argument with more control.
@@ -168,7 +167,7 @@ extern const CCLArg* ccl_arg_skip;
  * @return A private or local ::CCLArg* kernel argument.
  * */
 #define ccl_arg_full(value, size) \
-	ccl_arg_new(value, size)
+    ccl_arg_new(value, size)
 
 /** @} */
 

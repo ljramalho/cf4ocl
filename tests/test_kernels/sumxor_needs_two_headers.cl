@@ -16,12 +16,14 @@
  * */
 
 /**
+ * @internal
+ *
  * @file
  * File containing "sum and xor" kernel for testing. This kernel delegates the
  * sum and xor operations to functions declared in the header file.
  *
  * @author Nuno Fachada
- * @date 2016
+ * @date 2019
  * @copyright [GNU General Public License version 3 (GPLv3)](http://www.gnu.org/licenses/gpl.html)
  * */
 
@@ -29,7 +31,9 @@
 #include "xor_impl.cl.h"
 
 /**
- * Performs sum and xor of values from two vectors and a constant.
+ * @internal
+ *
+ * @brief Performs sum and xor of values from two vectors and a constant.
  *
  * @param[in] a First vector to sum.
  * @param[in] b Second vector to sum.
@@ -37,17 +41,17 @@
  * @param[in] d Constant to sum.
  * */
 __kernel void test_sum(
-	__global const uint *a,
-	__global const uint *b,
-	__global uint *c, uint d) {
+    __global const uint * a,
+    __global const uint * b,
+    __global uint * c, uint d) {
 
-	uint aux;
+    uint aux;
 
-	/* Get global ID. */
-	int gid = get_global_id(0);
+    /* Get global ID. */
+    int gid = get_global_id(0);
 
-	/* Perform sum. */
-	aux = do_sum(a[gid], b[gid], d);
-	/* Perform xor. */
-	c[gid] = do_xor(aux, b[gid], d * 2);
+    /* Perform sum. */
+    aux = do_sum(a[gid], b[gid], d);
+    /* Perform xor. */
+    c[gid] = do_xor(aux, b[gid], d * 2);
 }

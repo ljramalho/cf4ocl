@@ -16,6 +16,8 @@
  * */
 
 /**
+ * @internal
+ *
  * @file
  * The do_sum function implementation.
  *
@@ -25,7 +27,9 @@
  * */
 
 /**
- * Performs sum of three unsigned integers.
+ * @internal
+ *
+ * @brief Performs sum of three unsigned integers.
  *
  * @param[in] a First integer to sum.
  * @param[in] b Second integer to sum.
@@ -33,7 +37,7 @@
  * */
 uint do_sum(uint a, uint b, uint c) {
 
-	/* Perform sum. */
-	return a + b + c;
+    /* Perform sum. */
+    return a + b + c;
 
 }

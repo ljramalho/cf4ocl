@@ -18,12 +18,10 @@
 
 /**
  * @file
- *
- * Definition of a wrapper class and its methods for OpenCL device
- * objects.
+ * Definition of a wrapper class and its methods for OpenCL device objects.
  *
  * @author Nuno Fachada
- * @date 2016
+ * @date 2019
  * @copyright [GNU Lesser General Public License version 3 (LGPLv3)](http://www.gnu.org/licenses/lgpl.html)
  * */
 
@@ -61,13 +59,14 @@
  *
  * _Example: getting the first device in a context_
  *
- * @code{.c}
- * CCLContext* ctx;
- * CCLDevice* dev;
- * @endcode
- * @code{.c}
+ * ```c
+ * CCLContext * ctx;
+ * CCLDevice * dev;
+ * ```
+ *
+ * ```c
  * dev = ccl_context_get_device(ctx, 0, NULL);
- * @endcode
+ * ```
  *
  * @{
  */
@@ -75,29 +74,31 @@
 /* Decrements the reference count of the device wrapper object.
  * If it reaches 0, the device wrapper object is destroyed. */
 CCL_EXPORT
-void ccl_device_destroy(CCLDevice* dev);
+void ccl_device_destroy(CCLDevice * dev);
 
 /* Get the device wrapper for the given OpenCL device. */
 CCL_EXPORT
-CCLDevice* ccl_device_new_wrap(cl_device_id device);
+CCLDevice * ccl_device_new_wrap(cl_device_id device);
 
 /* Get the OpenCL version supported by the device. */
 CCL_EXPORT
-cl_uint ccl_device_get_opencl_version(CCLDevice* dev, CCLErr** err);
+cl_uint ccl_device_get_opencl_version(CCLDevice * dev, CCLErr ** err);
 
 /* Get the OpenCL version of the device. */
 CCL_EXPORT
-cl_uint ccl_device_get_opencl_c_version(CCLDevice* dev, CCLErr** err);
+cl_uint ccl_device_get_opencl_c_version(CCLDevice * dev, CCLErr ** err);
 
 /* Creates an array of sub-devices that each reference a
  * non-intersecting set of compute units within the given device. */
 CCL_EXPORT
-CCLDevice* const* ccl_device_create_subdevices(CCLDevice* dev,
-	const cl_device_partition_property *properties,
-	cl_uint *num_devs_ret, CCLErr** err);
+CCLDevice * const * ccl_device_create_subdevices(CCLDevice * dev,
+    const cl_device_partition_property * properties,
+    cl_uint * num_devs_ret, CCLErr ** err);
 
 /**
  * Get a ::CCLWrapperInfo device information object.
+ *
+ * @relates ccl_device
  *
  * @param[in] dev The device wrapper object.
  * @param[in] param_name Name of information/parameter to get.
@@ -105,11 +106,11 @@ CCLDevice* const* ccl_device_create_subdevices(CCLDevice* dev,
  * reporting is to be ignored.
  * @return The requested device information object. This object will
  * be automatically freed when the device wrapper object is
- * destroyed. If an error occurs, NULL is returned.
+ * destroyed. If an error occurs, `NULL` is returned.
  * */
 #define ccl_device_get_info(dev, param_name, err) \
-	ccl_wrapper_get_info((CCLWrapper*) dev, NULL, param_name, 0, \
-		CCL_INFO_DEVICE, CL_FALSE, err)
+    ccl_wrapper_get_info((CCLWrapper *) dev, NULL, param_name, 0, \
+        CCL_INFO_DEVICE, CL_FALSE, err)
 
 /**
  * Macro which returns a scalar device information value.
@@ -118,9 +119,11 @@ CCLDevice* const* ccl_device_create_subdevices(CCLDevice* dev,
  * might be ambiguous if zero is a valid return value. In this case, it
  * is necessary to check the error object.
  *
+ * @relates ccl_device
+ *
  * @param[in] dev The device wrapper object.
  * @param[in] param_name Name of information/parameter to get value of.
- * @param[in] param_type Type of parameter (e.g. cl_uint, size_t, etc.).
+ * @param[in] param_type Type of parameter (e.g. `cl_uint`, `size_t`, etc.).
  * @param[out] err Return location for a ::CCLErr object, or `NULL` if error
  * reporting is to be ignored.
  * @return The requested device information value. This value will be
@@ -128,41 +131,48 @@ CCLDevice* const* ccl_device_create_subdevices(CCLDevice* dev,
  * If an error occurs, zero is returned.
  * */
 #define ccl_device_get_info_scalar(dev, param_name, param_type, err) \
-	*((param_type*) ccl_wrapper_get_info_value((CCLWrapper*) dev, \
-		NULL, param_name, sizeof(param_type), \
-		CCL_INFO_DEVICE, CL_FALSE, err))
+    *((param_type *) ccl_wrapper_get_info_value((CCLWrapper *) dev, \
+        NULL, param_name, sizeof(param_type), \
+        CCL_INFO_DEVICE, CL_FALSE, err))
 
 /**
  * Macro which returns an array device information value.
  *
- * Use with care. In case an error occurs, NULL is returned, which
- * might be ambiguous if NULL is a valid return value. In this case, it
+ * Use with care. In case an error occurs, `NULL` is returned, which
+ * might be ambiguous if `NULL` is a valid return value. In this case, it
  * is necessary to check the error object.
+ *
+ * @relates ccl_device
  *
  * @param[in] dev The device wrapper object.
  * @param[in] param_name Name of information/parameter to get value of.
- * @param[in] param_type Type of parameter (e.g. char*, size_t*, etc.).
+ * @param[in] param_type Type of parameter in array (e.g. `char`, `size_t`,
+ * etc.).
  * @param[out] err Return location for a ::CCLErr object, or `NULL` if error
  * reporting is to be ignored.
  * @return The requested device information value. This value will be
  * automatically freed when the device wrapper object is destroyed.
- * If an error occurs, NULL is returned.
+ * If an error occurs, `NULL` is returned.
  * */
 #define ccl_device_get_info_array(dev, param_name, param_type, err) \
-	(param_type) ccl_wrapper_get_info_value((CCLWrapper*) dev, \
-		NULL, param_name, sizeof(param_type), \
-		CCL_INFO_DEVICE, CL_FALSE, err)
+    (param_type *) ccl_wrapper_get_info_value((CCLWrapper *) dev, \
+        NULL, param_name, sizeof(param_type), \
+        CCL_INFO_DEVICE, CL_FALSE, err)
 
 /**
  * Increase the reference count of the device wrapper object.
  *
+ * @relates ccl_device
+ *
  * @param[in] dev The device wrapper object.
  * */
 #define ccl_device_ref(dev) \
-	ccl_wrapper_ref((CCLWrapper*) dev)
+    ccl_wrapper_ref((CCLWrapper *) dev)
 
 /**
  * Alias to ccl_device_destroy().
+ *
+ * @relates ccl_device
  *
  * @param[in] dev Device wrapper object to destroy if reference count
  * is 1, otherwise just decrement the reference count.
@@ -172,11 +182,13 @@ CCLDevice* const* ccl_device_create_subdevices(CCLDevice* dev,
 /**
  * Get the OpenCL device_id object.
  *
+ * @relates ccl_device
+ *
  * @param[in] dev The device wrapper object.
  * @return The OpenCL device_id object.
  * */
 #define ccl_device_unwrap(dev) \
-	((cl_device_id) ccl_wrapper_unwrap((CCLWrapper*) dev))
+    ((cl_device_id) ccl_wrapper_unwrap((CCLWrapper *) dev))
 
 /** @} */
 

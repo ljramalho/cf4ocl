@@ -21,7 +21,7 @@
  * Convert OpenCL error codes to readable strings (function header).
  *
  * @author Nuno Fachada
- * @date 2016
+ * @date 2019
  * @copyright [GNU Lesser General Public License version 3 (LGPLv3)](http://www.gnu.org/licenses/lgpl.html)
  * */
 
@@ -40,23 +40,24 @@
  *
  * _Example:_
  *
- * @code{.c}
+ * ```c
  * cl_int status;
  * cl_event event;
- * @endcode
- * @code{.c}
+ * ```
+ *
+ * ```c
  * status = clWaitForEvents(1, &event);
  * if (status != CL_SUCCESS) {
  *     fprintf(stderr, "OpenCL error %d: %s", status, ccl_err(status));
  * }
- * @endcode
+ * ```
  *
  * @{
  */
 
 /* Convert OpenCL error code to a readable string. */
 CCL_EXPORT
-const char* ccl_err(int code);
+const char * ccl_err(int code);
 
 /** @} */
 

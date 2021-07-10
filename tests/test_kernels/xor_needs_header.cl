@@ -16,19 +16,23 @@
  * */
 
 /**
+ * @internal
+ *
  * @file
  * File containing xor kernel for testing. This kernel delegates the xor to
  * another function which is declared in the header file.
  *
  * @author Nuno Fachada
- * @date 2016
+ * @date 2019
  * @copyright [GNU General Public License version 3 (GPLv3)](http://www.gnu.org/licenses/gpl.html)
  * */
 
 #include "xor_impl.cl.h"
 
 /**
- * Performs xor of two vectors and a constant.
+ * @internal
+ *
+ * @brief Performs xor of two vectors and a constant.
  *
  * @param[in] a First vector to xor.
  * @param[in] b Second vector to xor.
@@ -36,13 +40,13 @@
  * @param[in] d Constant to xor.
  * */
 __kernel void test_xor(
-	__global const uint *a,
-	__global const uint *b,
-	__global uint *c, uint d) {
+    __global const uint * a,
+    __global const uint * b,
+    __global uint * c, uint d) {
 
-	/* Get global ID. */
-	int gid = get_global_id(0);
+    /* Get global ID. */
+    int gid = get_global_id(0);
 
-	/* Perform sum. */
-	c[gid] = do_xor(a[gid], b[gid], d);
+    /* Perform sum. */
+    c[gid] = do_xor(a[gid], b[gid], d);
 }
